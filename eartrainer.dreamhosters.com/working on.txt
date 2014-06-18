@@ -1,0 +1,12 @@
+Working on:
+upload.html (form)
+    *create form for students to send pronunciations to teacher
+    *create drop-down menu to select teacher
+upload.php (error check and upload)
+
+
+Sources:
+https://forums.digitalpoint.com/threads/mp3-file-upload-in-php.1174500/
+http://www.w3schools.com/php/php_file_upload.asp
+
+

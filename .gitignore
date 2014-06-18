@@ -1,3 +1,10 @@
+sounds/
+logs/
+Maildir/
+*.mp3
+*.wav
+analyticstracking.php
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
