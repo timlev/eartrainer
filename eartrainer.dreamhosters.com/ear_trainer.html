@@ -1,0 +1,98 @@
+<html>
+	<link rel="stylesheet" type="text/css" href="stylesheet.css"/>
+  <script src="lessons.json" onload='loadLesson("B and V")'></script>
+    <script>
+    var trycount = 0;
+    var lesson = lessons['B and V'][0][0];
+
+    function loadLesson(lesson){
+      console.log(lesson);
+    }
+
+    function clicked_answer(button)
+    {
+        var php_random_index = "<?php echo $random_index; ?>";
+        var lesson_length = parseInt("<?php echo $lesson_length; ?>");
+        var lesson = "<?php echo $lesson; ?>";
+        var score = parseInt("<?php echo $score; ?>");
+        var line = parseInt("<?php echo $line; ?>");
+	document.getElementById("quizscore").innerHTML="QUIZ - Score: " + score.toString() + "/" + (line + 1).toString();
+
+        if ((button == "button0" &&  php_random_index == 0) || (button == "button1" &&  php_random_index == 1))
+            {
+                if (trycount == 0)
+                {
+                    score += 1;
+                }
+                if (line + 1 < lesson_length)
+                {
+                    document.getElementById("correct").innerHTML="<img src='images/molumen_green_square_submit_icon.png' style='float:center'>Correct!";
+                    document.getElementById("quizscore").innerHTML="QUIZ - Score: " + score.toString() + "/" + (line + 1).toString();
+					line += 1;
+                    document.getElementById("line").value=line;
+                    document.getElementById("current_score").value=score;
+                    document.getElementById("form").action="ear_trainer.php?lesson=" + lesson;
+                    document.getElementById("form").style.visibility="visible";
+                }
+                else
+                {
+					document.getElementById("quizscore").innerHTML="QUIZ - Score: " + score.toString() + "/" + (line + 1).toString();
+                    document.getElementById("correct").innerHTML="<img src='images/molumen_green_square_submit_icon.png' style='float:center'>Correct! You are finished.";
+                    document.getElementById("form").action="index.php";
+                    document.getElementById("submit_button").value="Home";
+                    document.getElementById("form").style.visibility="visible";
+                }
+            }
+            else
+            {
+                document.getElementById("correct").innerHTML="<img src='images/molumen_red_square_error_warning_icon.png' style='float:center'>Wrong!";
+                trycount += 1;
+            }
+    }
+    </script>
+    <title>Ear Trainer</title>
+    <body>
+	<div id="header">
+		<img src="images/paro_AL_LISTEN_.png"/> Welcome to Ear Trainer
+	</div>
+	<div id="lessons">
+		<p><strong>Lessons:</strong></p>
+		<?php include "list_lessons.php" ?>
+	</div>
+
+	<div id="main">
+	        LISTEN
+	        <br/>
+	        <table border="1">
+	            <tr>
+        	        <td id="word_0_txt"></td>
+                	<td id="word_1_txt"></td></tr>
+	            <tr>
+	                <td> <audio id="word_0_sound" controls><source src="" type="audio/mpeg"></audio> </td>
+	                <td> <audio id="word_1_sound" controls><source src="" type="audio/mpeg"></audio> </td>
+	        </table>
+
+	        <p id="quizscore">QUIZ - Score: <span id='score'></span>/ <span id='total'></span> </p>
+	        <audio id="answer_sound" controls><source src="" type="audio/mpeg"></audio>
+
+	        <table border="1">
+	            <tr>
+	                <td><button name="button0" onclick="clicked_answer(this.name)" ></button></td>
+	                <td><button name="button1" onclick="clicked_answer(this.name)" ></button></td>
+	            </tr>
+	        </table>
+
+	        <span id="correct"></span>
+	        <!-- <a id="next"></a> -->
+	        <form name="form" id="form" action=<?="ear_trainer.php?lesson=" . $lesson ?> method="POST" style="visibility:hidden">
+	        <input type="hidden" name="current_score" id="current_score" value="<?= $score?>" />
+	        <input type="hidden" name="line" id="line" value="<?= $line + 1 ?>" />
+	        <input type="submit" name="submit_button" id="submit_button" value="Next"/>
+	        </form>
+
+	</div>
+        <p>If you cannot hear the sound, your computer or browser doesn't support the sound format.</p>
+        <p>Or, you have your speakers turned off :)</p>
+
+    </body>
+</html>
