@@ -1,55 +1,69 @@
 <html>
 	<link rel="stylesheet" type="text/css" href="stylesheet.css"/>
-  <script src="lessons.json" onload='loadLesson("B and V")'></script>
     <script>
-    var trycount = 0;
-    var lesson = lessons['B and V'][0][0];
+    lesson = [];
+    score = 0;
+    answer_index = shuffle(0,1);
+    function shuffle(o){
+        for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+        return o;
+        }
+    window.onload = function(){
+        lesson = loadLesson("Lessons/B and V");
+        var trycount = 0;
+        //var lesson = lessons['B and V'];
 
-    function loadLesson(lesson){
-      console.log(lesson);
-    }
+        function loadLesson(lesson){
+          //console.log(lessons[lesson]);
+          return lessons[lesson];
+        }
 
-    function clicked_answer(button)
-    {
-        var php_random_index = "<?php echo $random_index; ?>";
-        var lesson_length = parseInt("<?php echo $lesson_length; ?>");
-        var lesson = "<?php echo $lesson; ?>";
-        var score = parseInt("<?php echo $score; ?>");
-        var line = parseInt("<?php echo $line; ?>");
-	document.getElementById("quizscore").innerHTML="QUIZ - Score: " + score.toString() + "/" + (line + 1).toString();
+        function randomize(list){
+            return shuffle(list);
+        }
 
-        if ((button == "button0" &&  php_random_index == 0) || (button == "button1" &&  php_random_index == 1))
-            {
-                if (trycount == 0)
+        function clicked_answer(button)
+        {
+            answer_index = shuffle(0,1);
+            var lesson_length = lesson.length;
+            var score = parseInt("<?php echo $score; ?>");
+            var line = parseInt("<?php echo $line; ?>");
+        document.getElementById("quizscore").innerHTML="QUIZ - Score: " + score.toString() + "/" + (line + 1).toString();
+
+            if ((button == "button0" &&  php_random_index == 0) || (button == "button1" &&  php_random_index == 1))
                 {
-                    score += 1;
-                }
-                if (line + 1 < lesson_length)
-                {
-                    document.getElementById("correct").innerHTML="<img src='images/molumen_green_square_submit_icon.png' style='float:center'>Correct!";
-                    document.getElementById("quizscore").innerHTML="QUIZ - Score: " + score.toString() + "/" + (line + 1).toString();
-					line += 1;
-                    document.getElementById("line").value=line;
-                    document.getElementById("current_score").value=score;
-                    document.getElementById("form").action="ear_trainer.php?lesson=" + lesson;
-                    document.getElementById("form").style.visibility="visible";
+                    if (trycount == 0)
+                    {
+                        score += 1;
+                    }
+                    if (line + 1 < lesson_length)
+                    {
+                        document.getElementById("correct").innerHTML="<img src='images/molumen_green_square_submit_icon.png' style='float:center'>Correct!";
+                        document.getElementById("quizscore").innerHTML="QUIZ - Score: " + score.toString() + "/" + (line + 1).toString();
+                        line += 1;
+                        document.getElementById("line").value=line;
+                        document.getElementById("current_score").value=score;
+                        document.getElementById("form").action="ear_trainer.php?lesson=" + lesson;
+                        document.getElementById("form").style.visibility="visible";
+                    }
+                    else
+                    {
+                        document.getElementById("quizscore").innerHTML="QUIZ - Score: " + score.toString() + "/" + (line + 1).toString();
+                        document.getElementById("correct").innerHTML="<img src='images/molumen_green_square_submit_icon.png' style='float:center'>Correct! You are finished.";
+                        document.getElementById("form").action="index.php";
+                        document.getElementById("submit_button").value="Home";
+                        document.getElementById("form").style.visibility="visible";
+                    }
                 }
                 else
                 {
-					document.getElementById("quizscore").innerHTML="QUIZ - Score: " + score.toString() + "/" + (line + 1).toString();
-                    document.getElementById("correct").innerHTML="<img src='images/molumen_green_square_submit_icon.png' style='float:center'>Correct! You are finished.";
-                    document.getElementById("form").action="index.php";
-                    document.getElementById("submit_button").value="Home";
-                    document.getElementById("form").style.visibility="visible";
+                    document.getElementById("correct").innerHTML="<img src='images/molumen_red_square_error_warning_icon.png' style='float:center'>Wrong!";
+                    trycount += 1;
                 }
-            }
-            else
-            {
-                document.getElementById("correct").innerHTML="<img src='images/molumen_red_square_error_warning_icon.png' style='float:center'>Wrong!";
-                trycount += 1;
-            }
+        }
     }
     </script>
+  <script src="lessons.json"></script>
     <title>Ear Trainer</title>
     <body>
 	<div id="header">
