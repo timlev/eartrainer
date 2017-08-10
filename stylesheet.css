@@ -64,3 +64,9 @@ button {
 	font-size: 1.25em;
 	border-radius: 5px;
 }
+li:hover {
+	cursor: pointer;
+}
+button:hover {
+	cursor: pointer;
+}

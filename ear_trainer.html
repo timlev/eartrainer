@@ -8,53 +8,65 @@
         for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
         return o;
         }
+    function setTitle(lesson){
+            document.title = lesson;
+        }
+        
+    function fillChoiceBoxes(pair){
+            //Fill Text
+            document.getElementById("word_0_txt").innerHTML = pair[0];
+            document.getElementById("word_1_txt").innerHTML = pair[1];
+            document.getElementById("button0").innerText = pair[0];
+            document.getElementById("button1").innerText = pair[1];
+            //Set Audio Source
+            document.getElementById("word_0_sound").src = "./sounds/" + pair[0] + ".mp3";
+            document.getElementById("word_1_sound").src = "./sounds/" + pair[1] + ".mp3";
+            //Randomize Correct Answer Index
+            answer_index = shuffle([0,1])[0];
+            console.log(answer_index);
+            //Fill Correct
+            document.getElementById("answer_sound").src = "./sounds/" + pair[answer_index] + ".mp3";
+            //Add Event Listners
+            if (answer_index == 0){
+                document.getElementById("button0").addEventListener("click",function(){alert("Correct")},false);
+                document.getElementById("button1").addEventListener("click",function(){alert("Wrong")},false);
+            }
+            else {
+                document.getElementById("button1").addEventListener("click",function(){alert("Correct")},false);
+                document.getElementById("button0").addEventListener("click",function(){alert("Wrong")},false);
+            }
+        }
+    function show(){
+                document.getElementById("main").style.visibility = "visible";
+            }
+            
+    function loadLesson(lesson){
+        setTitle(lesson);
+        var n = 0;
+        fillChoiceBoxes(lessons[lesson][n]);
+        //console.log(lessons[lesson]);
+        }
     window.onload = function(){
         lesson = loadLesson("Lessons/B and V");
         var trycount = 0;
+        listLessons();
         //var lesson = lessons['B and V'];
-
-        function loadLesson(lesson){
-            function setTitle(lesson){
-                document.title = lesson;
+        function listLessons(){
+            console.log(lessons);
+            lessonList = document.getElementById("lessonList");
+            listBlob = "";
+            for (item in lessons){
+                console.log(item);
+                listBlob += "<li id='" + item + "' onclick='loadLesson(this.id)'>" + item + "</li>";
             }
-            function fillChoiceBoxes(pair){
-                //Fill Text
-                document.getElementById("word_0_txt").innerHTML = pair[0];
-                document.getElementById("word_1_txt").innerHTML = pair[1];
-                document.getElementById("button0").innerText = pair[0];
-                document.getElementById("button1").innerText = pair[1];
-                //Set Audio Source
-                document.getElementById("word_0_sound").src = "./sounds/" + pair[0] + ".mp3";
-                document.getElementById("word_1_sound").src = "./sounds/" + pair[1] + ".mp3";
-                //Randomize Correct Answer Index
-                answer_index = shuffle([0,1])[0];
-                console.log(answer_index);
-                //Fill Correct
-                document.getElementById("answer_sound").src = "./sounds/" + pair[answer_index] + ".mp3";
-                //Add Event Listners
-                if (answer_index == 0){
-                    document.getElementById("button0").addEventListener("click",function(){alert("Correct")},false);
-                    document.getElementById("button1").addEventListener("click",function(){alert("Wrong")},false);
-                }
-                else {
-                    document.getElementById("button1").addEventListener("click",function(){alert("Correct")},false);
-                    document.getElementById("button0").addEventListener("click",function(){alert("Wrong")},false);
-                }
-            }
-            function show(){
-                document.getElementById("main").style.visibility = "visible";
-            }
-            setTitle(lesson);
-            var n = 0;
-            fillChoiceBoxes(lessons[lesson][n]);
-          //console.log(lessons[lesson]);
-          show();
-          return lessons[lesson];
+            lessonList.innerHTML = listBlob;
         }
 
-        function randomize(list){
-            return shuffle(list);
-        }
+        
+        
+        show();
+        return lessons[lesson];
+    };
 
         function clicked_answer(button)
         {
@@ -95,7 +107,6 @@
                     trycount += 1;
                 }
         }
-    }
     </script>
   <script src="lessons.json"></script>
     <title>Ear Trainer</title>
@@ -105,6 +116,7 @@
 	</div>
 	<div id="lessons">
 		<p><strong>Lessons:</strong></p>
+        <ul><div id="lessonList"></div></ul>
 	</div>
 
 	<div id="main">
@@ -116,7 +128,7 @@
                 	<td id="word_1_txt"></td></tr>
 	            <tr>
 	                <td> <audio id="word_0_sound" controls><source src="" type="audio/mpeg"></audio> </td>
-	                <td> <audio id="word_1_sound" controls><source src="" type="audio/mpeg"></audio> </td>
+	                <td> <audio id="word_1_sound" controls><source src="" type="audio/mpeg"></audio> </td></tr>
 	        </table>
 
 	        <p id="quizscore">QUIZ - Score: <span id='score'></span>/ <span id='total'></span> </p>
