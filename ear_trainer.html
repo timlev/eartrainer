@@ -3,7 +3,7 @@
     <script>
     lesson = [];
     score = 0;
-    answer_index = shuffle(0,1);
+    answer_index = null;
     function shuffle(o){
         for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
         return o;
@@ -27,10 +27,19 @@
                 document.getElementById("word_0_sound").src = "./sounds/" + pair[0] + ".mp3";
                 document.getElementById("word_1_sound").src = "./sounds/" + pair[1] + ".mp3";
                 //Randomize Correct Answer Index
-                answer_index = shuffle(0,1);
-                //console.log(answer_index);
+                answer_index = shuffle([0,1])[0];
+                console.log(answer_index);
                 //Fill Correct
                 document.getElementById("answer_sound").src = "./sounds/" + pair[answer_index] + ".mp3";
+                //Add Event Listners
+                if (answer_index == 0){
+                    document.getElementById("button0").addEventListener("click",function(){alert("Correct")},false);
+                    document.getElementById("button1").addEventListener("click",function(){alert("Wrong")},false);
+                }
+                else {
+                    document.getElementById("button1").addEventListener("click",function(){alert("Correct")},false);
+                    document.getElementById("button0").addEventListener("click",function(){alert("Wrong")},false);
+                }
             }
             function show(){
                 document.getElementById("main").style.visibility = "visible";
@@ -49,7 +58,7 @@
 
         function clicked_answer(button)
         {
-            answer_index = shuffle(0,1);
+            //answer_index = shuffle(0,1);
             var lesson_length = lesson.length;
             var score = parseInt("<?php echo $score; ?>");
             var line = parseInt("<?php echo $line; ?>");
@@ -96,7 +105,6 @@
 	</div>
 	<div id="lessons">
 		<p><strong>Lessons:</strong></p>
-		<?php include "list_lessons.php" ?>
 	</div>
 
 	<div id="main">
@@ -120,14 +128,6 @@
 	                <td><button id="button1" onclick="clicked_answer(this.id)" ></button></td>
 	            </tr>
 	        </table>
-
-	        <span id="correct"></span>
-	        <!-- <a id="next"></a> -->
-	        <form name="form" id="form" action=<?="ear_trainer.php?lesson=" . $lesson ?> method="POST" style="visibility:hidden">
-	        <input type="hidden" name="current_score" id="current_score" value="<?= $score?>" />
-	        <input type="hidden" name="line" id="line" value="<?= $line + 1 ?>" />
-	        <input type="submit" name="submit_button" id="submit_button" value="Next"/>
-	        </form>
 
 	</div>
         <p>If you cannot hear the sound, your computer or browser doesn't support the sound format.</p>
