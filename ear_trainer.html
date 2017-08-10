@@ -14,7 +14,32 @@
         //var lesson = lessons['B and V'];
 
         function loadLesson(lesson){
+            function setTitle(lesson){
+                document.title = lesson;
+            }
+            function fillChoiceBoxes(pair){
+                //Fill Text
+                document.getElementById("word_0_txt").innerHTML = pair[0];
+                document.getElementById("word_1_txt").innerHTML = pair[1];
+                document.getElementById("button0").innerText = pair[0];
+                document.getElementById("button1").innerText = pair[1];
+                //Set Audio Source
+                document.getElementById("word_0_sound").src = "./sounds/" + pair[0] + ".mp3";
+                document.getElementById("word_1_sound").src = "./sounds/" + pair[1] + ".mp3";
+                //Randomize Correct Answer Index
+                answer_index = shuffle(0,1);
+                //console.log(answer_index);
+                //Fill Correct
+                document.getElementById("answer_sound").src = "./sounds/" + pair[answer_index] + ".mp3";
+            }
+            function show(){
+                document.getElementById("main").style.visibility = "visible";
+            }
+            setTitle(lesson);
+            var n = 0;
+            fillChoiceBoxes(lessons[lesson][n]);
           //console.log(lessons[lesson]);
+          show();
           return lessons[lesson];
         }
 
@@ -91,8 +116,8 @@
 
 	        <table border="1">
 	            <tr>
-	                <td><button name="button0" onclick="clicked_answer(this.name)" ></button></td>
-	                <td><button name="button1" onclick="clicked_answer(this.name)" ></button></td>
+	                <td><button id="button0" onclick="clicked_answer(this.id)" ></button></td>
+	                <td><button id="button1" onclick="clicked_answer(this.id)" ></button></td>
 	            </tr>
 	        </table>
 
