@@ -1,18 +1,66 @@
 <html>
 	<link rel="stylesheet" type="text/css" href="stylesheet.css"/>
     <script>
-    lesson = [];
-    score = 0;
-    answer_index = null;
+    var lesson = null;
+    var score = 0;
+    var total = 0;
+    var answer_index = null;
+    var current_index = 0;
+    var trycount = 0;
     function shuffle(o){
         for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
         return o;
         }
     function setTitle(lesson){
-            document.title = lesson;
+            document.title = window.lesson;
         }
-        
+    function reset(){
+        score = 0;
+        document.getElementById("button0").removeEventListener("click",correct,false);
+        document.getElementById("button1").removeEventListener("click",wrong,false);
+        document.getElementById("button1").removeEventListener("click",correct,false);
+        document.getElementById("button0").removeEventListener("click",wrong,false);
+    }
+
+    function updateScore(){
+        document.getElementById("score").innerText = score;
+        document.getElementById("total").innerText = total;
+    }
+
+    function correct(){
+        alert("Correct");
+        console.log("Lesson length = " + lessons[document.title].length);
+        console.log("Current Index = " + current_index);
+        if (current_index + 1 >= lessons[document.title].length){
+            hide();
+            document.getElementById("quizscore").style.visibility = "visible";
+        }
+        document.getElementById("button0").removeEventListener("click",correct,false);
+        document.getElementById("button1").removeEventListener("click",wrong,false);
+        document.getElementById("button1").removeEventListener("click",correct,false);
+        document.getElementById("button0").removeEventListener("click",wrong,false);
+        if (trycount == 0){
+            current_index += 1;
+            score += 1;
+            total += 1;
+            trycount = 0;
+            fillChoiceBoxes(lessons[document.title][current_index]);
+        }
+        else {
+            trycount = 0;
+            current_index += 1;
+            total += 1;
+            fillChoiceBoxes(lessons[document.title][current_index]);
+        }
+    }
+    function wrong(){
+        alert("Wrong");
+        trycount += 1;
+    }
+    
     function fillChoiceBoxes(pair){
+            updateScore();
+            console.log(pair);
             //Fill Text
             document.getElementById("word_0_txt").innerHTML = pair[0];
             document.getElementById("word_1_txt").innerHTML = pair[1];
@@ -28,35 +76,42 @@
             document.getElementById("answer_sound").src = "./sounds/" + pair[answer_index] + ".mp3";
             //Add Event Listners
             if (answer_index == 0){
-                document.getElementById("button0").addEventListener("click",function(){alert("Correct")},false);
-                document.getElementById("button1").addEventListener("click",function(){alert("Wrong")},false);
+                document.getElementById("button0").addEventListener("click",correct,false);
+                document.getElementById("button1").addEventListener("click",wrong,false);
             }
             else {
-                document.getElementById("button1").addEventListener("click",function(){alert("Correct")},false);
-                document.getElementById("button0").addEventListener("click",function(){alert("Wrong")},false);
+                document.getElementById("button1").addEventListener("click",correct,false);
+                document.getElementById("button0").addEventListener("click",wrong,false);
             }
         }
     function show(){
                 document.getElementById("main").style.visibility = "visible";
             }
-            
-    function loadLesson(lesson){
-        setTitle(lesson);
-        var n = 0;
-        fillChoiceBoxes(lessons[lesson][n]);
+
+    function hide(){
+                document.getElementById("main").style.visibility = "hidden";
+            }
+
+    function loadLesson(l){
+        window.lesson = l;
+        console.log(window.lesson);
+        setTitle(window.lesson);
+        reset();
+        show();
+        fillChoiceBoxes(lessons[window.lesson][window.current_index]);
         //console.log(lessons[lesson]);
         }
     window.onload = function(){
-        lesson = loadLesson("Lessons/B and V");
+        window.lesson = loadLesson("Lessons/B and V");
         var trycount = 0;
         listLessons();
         //var lesson = lessons['B and V'];
         function listLessons(){
-            console.log(lessons);
+            //console.log(lessons);
             lessonList = document.getElementById("lessonList");
             listBlob = "";
             for (item in lessons){
-                console.log(item);
+                //console.log(item);
                 listBlob += "<li id='" + item + "' onclick='loadLesson(this.id)'>" + item + "</li>";
             }
             lessonList.innerHTML = listBlob;
@@ -72,8 +127,8 @@
         {
             //answer_index = shuffle(0,1);
             var lesson_length = lesson.length;
-            var score = parseInt("<?php echo $score; ?>");
-            var line = parseInt("<?php echo $line; ?>");
+            //var score = parseInt("<?php echo $score; ?>");
+            //var line = parseInt("<?php echo $line; ?>");
         document.getElementById("quizscore").innerHTML="QUIZ - Score: " + score.toString() + "/" + (line + 1).toString();
 
             if ((button == "button0" &&  php_random_index == 0) || (button == "button1" &&  php_random_index == 1))
@@ -136,8 +191,8 @@
 
 	        <table border="1">
 	            <tr>
-	                <td><button id="button0" onclick="clicked_answer(this.id)" ></button></td>
-	                <td><button id="button1" onclick="clicked_answer(this.id)" ></button></td>
+	                <td><button id="button0" ></button></td>
+	                <td><button id="button1" ></button></td>
 	            </tr>
 	        </table>
 
