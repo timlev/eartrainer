@@ -1,8 +1,8 @@
-sounds/
+#sounds/
 logs/
 Maildir/
-*.mp3
-*.wav
+#*.mp3
+#*.wav
 analyticstracking.php
 
 # Byte-compiled / optimized / DLL files
